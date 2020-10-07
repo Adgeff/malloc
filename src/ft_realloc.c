@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:02:58 by geargenc          #+#    #+#             */
-/*   Updated: 2020/09/23 04:58:20 by geargenc         ###   ########.fr       */
+/*   Updated: 2020/10/05 16:34:55 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ void		*ft_realloc_notlarge(
 	void		*addr;
 
 	size = size ? size : 1;
-	size = size + zone_desc->step_size - 1 / zone_desc->step_size *
-		zone_desc->step_size;
+	size = ((size - 1) / zone_desc->step_size + 1) * zone_desc->step_size;
 	if (alloc->next ?
 		(size_t)(alloc->next->addr_begin - alloc->addr_begin) >= size :
 		(size_t)(zone->addr_begin + zone_desc->zone_size -

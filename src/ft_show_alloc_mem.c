@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/23 01:30:55 by geargenc          #+#    #+#             */
-/*   Updated: 2020/09/23 04:12:42 by geargenc         ###   ########.fr       */
+/*   Updated: 2020/10/05 17:00:23 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,12 @@ void		ft_show_alloc_zone(
 		ft_putaddr((uintptr_t)alloc->addr_begin);
 		ft_putstr(" - ");
 		ft_putaddr((uintptr_t)(alloc->addr_begin + alloc->size));
-		ft_putstr(" : ");
+		ft_putstr(" :\t");
 		ft_putsize(alloc->size);
 		ft_putstr(" octets\n");
 		alloc = alloc->next;
 	}
+	ft_putstr("\n");
 }
 
 void		ft_show_alloc_zonetype(
@@ -69,7 +70,7 @@ void		ft_show_alloc_zonetype(
 		ft_putstr(" - ");
 		ft_putaddr((uintptr_t)(zone->addr_begin + (zone_desc->zone_size ?
 			zone_desc->zone_size : zone->first->size)));
-		ft_putstr(" : ");
+		ft_putstr(" :\t\t*");
 		ft_putsize((size_t)((zone_desc->zone_size ?
 			zone_desc->zone_size : zone->first->size)));
 		ft_putstr(" octets\n");
