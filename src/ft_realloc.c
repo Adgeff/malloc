@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:02:58 by geargenc          #+#    #+#             */
-/*   Updated: 2020/10/05 16:34:55 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/14 04:50:17 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,11 @@ void		*ft_realloc(
 				&(g_zone_desctab[i]), size));
 	}
 	return (NULL);
+}
+
+void		*realloc(
+				void *addr,
+				size_t size)
+{
+	return (ft_realloc(addr, size));
 }

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/23 01:30:55 by geargenc          #+#    #+#             */
-/*   Updated: 2020/10/05 17:00:23 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/14 05:33:59 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,9 @@ void		ft_show_alloc_mem(void)
 		ft_show_alloc_zonetype(&(g_zone_desctab[i]));
 		i++;
 	}
+}
+
+void		show_alloc_mem(void)
+{
+	ft_show_alloc_mem(void);
 }

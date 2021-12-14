@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:34:45 by geargenc          #+#    #+#             */
-/*   Updated: 2020/09/23 05:02:29 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/14 04:48:14 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,4 +123,10 @@ void			*ft_malloc(
 	if ((addr = zone_desc->f_allocate(size, zone_desc)) == MAP_FAILED)
 		return (NULL);
 	return (addr);
+}
+
+void			*malloc(
+					size_t size)
+{
+	return (ft_malloc(size));
 }

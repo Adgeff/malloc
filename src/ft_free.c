@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:34:12 by geargenc          #+#    #+#             */
-/*   Updated: 2020/09/23 04:50:42 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/14 04:47:08 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,10 @@ void		ft_free(
 		ft_free_alloc(alloc, zone, &(g_zone_desctab[i]));
 	else
 		printf("STOP DE FREE D'LA MERDE STP (%p)\n", addr);
+}
+
+void		free(
+				void *addr)
+{
+	ft_free(addr);
 }
