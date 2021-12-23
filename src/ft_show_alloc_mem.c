@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/23 01:30:55 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/14 05:43:31 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/23 18:20:24 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void		ft_show_alloc_zone(
 }
 
 void		ft_show_alloc_zonetype(
-				t_zone_desc *zone_desc)
+				const t_zone_desc *zone_desc)
 {
 	t_zone		*zone;
 
@@ -70,7 +70,7 @@ void		ft_show_alloc_zonetype(
 		ft_putstr(" - ");
 		ft_putaddr((uintptr_t)(zone->addr_begin + (zone_desc->zone_size ?
 			zone_desc->zone_size : zone->first->size)));
-		ft_putstr(" :\t\t*");
+		ft_putstr(" :\t\t");
 		ft_putsize((size_t)((zone_desc->zone_size ?
 			zone_desc->zone_size : zone->first->size)));
 		ft_putstr(" octets\n");
@@ -94,5 +94,7 @@ void		ft_show_alloc_mem(void)
 
 void		show_alloc_mem(void)
 {
+	pthread_mutex_lock(&g_ft_malloc_mutex);
 	ft_show_alloc_mem();
+	pthread_mutex_unlock(&g_ft_malloc_mutex);
 }

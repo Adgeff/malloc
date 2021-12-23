@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:02:58 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/14 04:50:17 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:16:48 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void		*ft_realloc_large(
 				t_alloc *alloc,
 				t_zone *zone,
-				t_zone_desc *zone_desc,
+				const t_zone_desc *zone_desc,
 				size_t size)
 {
 	void		*addr;
@@ -42,7 +42,7 @@ void		*ft_realloc_large(
 void		*ft_realloc_notlarge(
 				t_alloc *alloc,
 				t_zone *zone,
-				t_zone_desc *zone_desc,
+				const t_zone_desc *zone_desc,
 				size_t size)
 {
 	void		*addr;
@@ -67,14 +67,14 @@ void		*ft_realloc_notlarge(
 void		*ft_realloc_change_zone(
 				t_alloc *alloc,
 				t_zone *zone,
-				t_zone_desc *zone_desc,
+				const t_zone_desc *zone_desc,
 				size_t size)
 {
 	void		*addr;
 
 	if ((addr = ft_malloc(size)) == NULL)
 		return (NULL);
-	ft_memcpy(addr, alloc->addr_begin, alloc->size);
+	ft_memcpy(addr, alloc->addr_begin, alloc->size > size ? size : alloc->size);
 	ft_free_alloc(alloc, zone, zone_desc);
 	return (addr);
 }
@@ -88,7 +88,7 @@ void		*ft_realloc(
 	t_alloc		*alloc;
 
 	if (addr == NULL)
-		return (ft_malloc(size));
+		return (g_root.f_malloc(size));
 	i = 0;
 	zone = NULL;
 	while (g_zone_desctab[i].zone_ptr &&
@@ -113,5 +113,10 @@ void		*realloc(
 				void *addr,
 				size_t size)
 {
-	return (ft_realloc(addr, size));
+	void	*ret;
+
+	pthread_mutex_lock(&g_ft_malloc_mutex);
+	ret = ft_realloc(addr, size);
+	pthread_mutex_unlock(&g_ft_malloc_mutex);
+	return (ret);
 }

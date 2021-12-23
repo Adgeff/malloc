@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/21 06:13:04 by geargenc          #+#    #+#             */
-/*   Updated: 2020/09/22 05:50:05 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/14 06:48:56 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_alloc		*ft_find_alloc(
 
 t_zone		*ft_find_zone(
 				void *addr,
-				t_zone_desc *zone_desc)
+				const t_zone_desc *zone_desc)
 {
 	t_zone		*list;
 

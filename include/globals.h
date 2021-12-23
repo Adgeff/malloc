@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:26:47 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/14 04:48:47 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:17:37 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,19 @@
 
 # include "malloc.h"
 
-t_root				g_root;
+t_root				g_root = (t_root){
+	.tiny = NULL,
+	.small = NULL,
+	.large = NULL,
+	.org = NULL,
+	.page_size = 0,
+	.org_link_size = 0,
+	.org_link_nb = 0,
+	.org_availability_size = 0,
+	.f_malloc = &ft_first_malloc
+};
+
+pthread_mutex_t 	g_ft_malloc_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 const t_zone_desc	g_zone_desctab[] =
 {

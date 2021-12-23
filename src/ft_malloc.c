@@ -6,16 +6,16 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 04:34:45 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/14 04:48:14 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:16:57 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_zone_desc		*ft_zone_desctab(
-					size_t size)
+const t_zone_desc	*ft_zone_desctab(
+						size_t size)
 {
-	int				i;
+	int					i;
 
 	i = 0;
 	while (g_zone_desctab[i].alloc_max_size
@@ -24,13 +24,13 @@ t_zone_desc		*ft_zone_desctab(
 	return (&(g_zone_desctab[i]));
 }
 
-void			*ft_allocate(
-					void *addr,
-					size_t size,
-					t_alloc **place,
-					t_alloc *prev)
+void				*ft_allocate(
+						void *addr,
+						size_t size,
+						t_alloc **place,
+						t_alloc *prev)
 {
-	t_alloc			*alloc;
+	t_alloc				*alloc;
 
 	if ((alloc = (t_alloc *)ft_org_alloc()) == MAP_FAILED)
 		return (MAP_FAILED);
@@ -38,39 +38,41 @@ void			*ft_allocate(
 	alloc->size = size;
 	alloc->previous = prev;
 	alloc->next = *place;
+	if (alloc->next)
+		alloc->next->previous = alloc;
 	*place = alloc;
 	return (addr);
 }
 
-void			*ft_find_space(
-					size_t size,
-					t_zone *zone,
-					t_zone_desc *zone_desc)
+void				*ft_find_space(
+						size_t size,
+						t_zone *zone,
+						const t_zone_desc *zone_desc)
 {
-	t_alloc			*alloc;
+	t_alloc				*alloc;
 
 	if (!zone->first ||
-		(size_t)(zone->first->addr_begin - zone->addr_begin) >= size)
+		((size_t)zone->first->addr_begin - (size_t)zone->addr_begin) >= size)
 		return (ft_allocate(zone->addr_begin, size, &(zone->first), NULL));
 	alloc = zone->first;
-	while (alloc && alloc->next && size >
-		alloc->next->addr_begin - alloc->addr_begin - alloc->size)
+	while (alloc->next && ((size_t)alloc->addr_begin + alloc->size) + size >
+		(size_t)alloc->next->addr_begin)
 		alloc = alloc->next;
-	if (alloc->next || size <= zone->addr_begin + zone_desc->zone_size -
-		alloc->addr_begin - alloc->size)
+	if (alloc->next || ((size_t)alloc->addr_begin + alloc->size) + size
+		<= (size_t)zone->addr_begin + zone_desc->zone_size)
 	{
-		return (ft_allocate(alloc->addr_begin + alloc->size,
+		return (ft_allocate((void *)((size_t)alloc->addr_begin + alloc->size),
 			size, &(alloc->next), alloc));
 	}
 	return (NULL);
 }
 
-void			*ft_allocate_zone(
-					size_t size,
-					t_zone_desc *zone_desc)
+void				*ft_allocate_zone(
+						size_t size,
+						const t_zone_desc *zone_desc)
 {
-	t_zone			*zone;
-	void			*addr;
+	t_zone				*zone;
+	void				*addr;
 
 	if ((addr = mmap(NULL, zone_desc->zone_size ? zone_desc->zone_size : size,
 		PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0)) != MAP_FAILED)
@@ -95,12 +97,12 @@ void			*ft_allocate_zone(
 	return (MAP_FAILED);
 }
 
-void			*ft_find_space_zone(
-					size_t size,
-					t_zone_desc *zone_desc)
+void				*ft_find_space_zone(
+						size_t size,
+						const t_zone_desc *zone_desc)
 {
-	t_zone			*zone;
-	void			*addr;
+	t_zone				*zone;
+	void				*addr;
 
 	zone = *(zone_desc->zone_ptr);
 	addr = NULL;
@@ -111,11 +113,11 @@ void			*ft_find_space_zone(
 	return (ft_allocate_zone(size, zone_desc));
 }
 
-void			*ft_malloc(
-					size_t size)
+void				*ft_malloc(
+						size_t size)
 {
-	t_zone_desc		*zone_desc;
-	void			*addr;
+	const t_zone_desc	*zone_desc;
+	void				*addr;
 
 	size = size ? size : 1;
 	zone_desc = ft_zone_desctab(size);
@@ -125,8 +127,51 @@ void			*ft_malloc(
 	return (addr);
 }
 
+void			*calloc(size_t count, size_t size)
+{
+	void		*ret;
+
+	ret = malloc(count * size);
+	if (ret)
+		ft_bzero(ret, count * size);
+	return (ret);
+}
+
+void			*xmalloc(size_t size)
+{
+	void		*ret;
+
+	errno = 0;
+	ret = malloc(size);
+	if (ret == NULL)
+	{
+		perror("xmalloc");
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
+}
+
+void			*xrealloc(void *addr, size_t size)
+{
+	void		*ret;
+
+	errno = 0;
+	ret = realloc(addr, size);
+	if (ret == NULL)
+	{
+		perror("xrealloc");
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
+}
+
 void			*malloc(
 					size_t size)
 {
-	return (ft_malloc(size));
+	void			*ret;
+
+	pthread_mutex_lock(&g_ft_malloc_mutex);
+	ret = g_root.f_malloc(size);
+	pthread_mutex_unlock(&g_ft_malloc_mutex);
+	return (ret);
 }

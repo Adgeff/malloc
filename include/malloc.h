@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:22:51 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/14 05:42:45 by geargenc         ###   ########.fr       */
+/*   Updated: 2021/12/23 19:22:52 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 # include <sys/mman.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <stdbool.h>
+# include <errno.h>
+# include <pthread.h>
 
 typedef struct				s_alloc
 {
@@ -63,6 +66,7 @@ typedef struct				s_root
 	size_t					org_link_size;
 	unsigned int			org_link_nb;
 	size_t					org_availability_size;
+	void					*(*f_malloc)(size_t);
 }							t_root;
 
 typedef struct				s_zone_desc
@@ -74,52 +78,60 @@ typedef struct				s_zone_desc
 	struct s_zone			**zone_ptr;
 	void					*(*f_allocate)(
 								size_t,
-								struct s_zone_desc *);
+								const struct s_zone_desc *);
 	void					*(*f_realloc)(
 								t_alloc *,
 								t_zone *,
-								struct s_zone_desc *,
+								const struct s_zone_desc *,
 								size_t);
 }							t_zone_desc;
 
 extern t_root				g_root;
+extern pthread_mutex_t 		g_ft_malloc_mutex;
 extern const t_zone_desc	g_zone_desctab[];
 
-t_zone_desc					*ft_zone_desctab(
+const t_zone_desc			*ft_zone_desctab(
 								size_t size);
 
 void						*ft_allocate_zone(
 								size_t size,
-								t_zone_desc *zone_desc);
+								const t_zone_desc *zone_desc);
 void						*ft_find_space_zone(
 								size_t size,
-								t_zone_desc *zone_desc);
+								const t_zone_desc *zone_desc);
 void						*ft_malloc(
+								size_t size);
+void						*malloc(
 								size_t size);
 
 void						ft_free_alloc(
 								t_alloc *alloc,
 								t_zone *zone,
-								t_zone_desc *zone_desc);
+								const t_zone_desc *zone_desc);
 void						ft_free(
+								void *addr);
+void						free(
 								void *addr);
 
 void						ft_org_free(
 								void *addr);
 void						*ft_org_alloc(void);
-void						ft_org_init(void) __attribute__((constructor));
+void						*ft_first_malloc(size_t size);
 
 void						*ft_realloc_large(
 								t_alloc *alloc,
 								t_zone *zone,
-								t_zone_desc *zone_desc,
+								const t_zone_desc *zone_desc,
 								size_t size);
 void						*ft_realloc_notlarge(
 								t_alloc *alloc,
 								t_zone *zone,
-								t_zone_desc *zone_desc,
+								const t_zone_desc *zone_desc,
 								size_t size);
 void						*ft_realloc(
+								void *addr,
+								size_t size);
+void						*realloc(
 								void *addr,
 								size_t size);
 
@@ -128,15 +140,10 @@ t_alloc						*ft_find_alloc(
 								t_zone *zone);
 t_zone						*ft_find_zone(
 								void *addr,
-								t_zone_desc *zone_desc);
+								const t_zone_desc *zone_desc);
 
 void						ft_show_alloc_mem(void);
-// t_alloc			*lookforspace(void *current, t_alloc *next, size_t current_len, size_t len)
-// {
-// 	if (next - current - current_len < len)
-// 		return (lookforspace(next, next->next, next->size + sizeof(t_alloc), len)
-// }
-
-// place = lookforspace(zone, zone->first, sizeof(t_zone), len);
+void						show_alloc_mem(void);
+void						*calloc(size_t count, size_t size);
 
 #endif
