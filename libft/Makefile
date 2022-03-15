@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/11/19 19:15:46 by geargenc          #+#    #+#              #
-#    Updated: 2017/12/15 22:58:27 by geargenc         ###   ########.fr        #
+#    Updated: 2022/03/14 16:36:19 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,7 +94,7 @@ OBJ		=	$(FILES:.c=.o)
 
 INC		=	includes/
 
-COMP	=	gcc -Wall -Wextra -Werror
+COMP	=	gcc -Wall -Wextra -Werror -fPIC
 
 all		:	$(NAME)
 
