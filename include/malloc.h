@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/20 02:22:51 by geargenc          #+#    #+#             */
-/*   Updated: 2021/12/23 19:22:52 by geargenc         ###   ########.fr       */
+/*   Updated: 2022/03/14 14:09:57 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <stdbool.h>
 # include <errno.h>
 # include <pthread.h>
+# include <inttypes.h>
 
 typedef struct				s_alloc
 {
